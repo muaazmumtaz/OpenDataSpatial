@@ -72,6 +72,7 @@ df_kecamatan['Selected_Processed'] = df_kecamatan['Kecamatan'].apply(clean)
 df=None
 
 st.title('Open Data Template')
+st.write('###Daerah Sumatera Utara')
 
 # Upload File
 uploaded_file = st.file_uploader("Pilih File !", type=["xls", "xlsx", "csv"])
