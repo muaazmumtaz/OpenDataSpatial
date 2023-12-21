@@ -7,8 +7,7 @@ import zipfile
 import fungsi
 import datetime
 
-st.write('22-12-2023')
-st.write('ver.1')
+st.write('ver.1, 22-12-2023')
 
 # Masukkan Dataset Awal
 df_kabkota = pd.read_excel('Kabupaten_Kota.xlsx')
