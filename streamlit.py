@@ -5,6 +5,7 @@ import tempfile
 import os
 import zipfile
 import fungsi
+import datetime
 
 st.write('19-12-2023')
 
@@ -71,9 +72,18 @@ if df is not None:
         #     map_df = df.copy()
         #     select_date = st.selectbox("Pilih Kolom Waktu", list_column)
         #     map_df['Date'] = pd.to_datetime(map_df[select_date], format='%Y', infer_datetime_format=True, errors='coerce')
-        #     start_date, end_date = st.slider("Select Date Range", map_df['Date'].min(), map_df['Date'].max(), (map_df['Date'].min(), map_df['Date'].max()))
-        #
-        #     map_df = map_df[(map_df['Date'] >= start_date) & (map_df['Date'] <= end_date)]
+        #     map_df['Date'] = map_df['Date'].dt.strftime('%Y')
+        #     st.dataframe(map_df)
+        #     # selection_dates = st.slider("Select Date Range",
+        #     #                             min_value=min(map_df['Date']),
+        #     #                             max_value=max(map_df['Date']),
+        #     #                             value=(min(map_df['Date']),max(map_df['Date'])),format='YYYY')
+        #     selection_dates = st.slider("Select Date Range",
+        #                                 min_value=2020,
+        #                                 max_value=2023)
+        #     # map_df = map_df[(map_df['Date'] >= start_date) & (map_df['Date'] <= end_date)]
+        #     mask = map_df['Date'].between(*selection_dates)
+        #     map_df = map_df[mask]
         #     st_map = st_folium(fungsi.map(map_df, jenis_lokasi), width= 800)
         # except:
         #     st.warning('Kolom Waktu Anda Salah !')
@@ -124,6 +134,54 @@ if df is not None:
                 data=excel,
                 file_name="output_excel.xlsx",
                 key="download_button3",
+            )
+
+        make_metadata = st.checkbox("Buat Metadata !")
+
+        if make_metadata is True:
+            default_ket = {'Kabupaten/Kota':'Nama Kabupaten/Kota',
+                           'Status Kabupaten/Kota':'Status administrasi Kabupaten/Kota',
+                           'Kecamatan':'Nama Kecamatan',
+                           'Kode Kemendagri':'Kode wilayah administrasi',
+                           'Latitude':'Garis lintang wilayah administrasi',
+                           'Longitude':'Garis bujur wilayah administrasi'}
+            tipe_list = ['String', 'Float', 'Integer', 'Number', 'Date', 'Lainnya']
+            metadata = {}
+
+            for i in df.columns:
+                col6, col7 = st.columns(2)
+                with col6:
+                    default_value = default_ket.get(i, "Isi Keterangan")
+                    keterangan = st.text_input(f"Keterangan {i}", default_value)
+                    non_null_count = df[i].count()
+                    null_count = df[i].isnull().sum()
+                with col7:
+                    tipe_data = st.selectbox(f"Tipe Data {i}", tipe_list)
+                    if tipe_data == 'Lainnya':
+                        tipe_data = st.text_input(f"Masukkan Tipe Data !")
+
+                metadata[i] = {
+                    'keterangan': keterangan,
+                    'tipe_data': tipe_data,
+                    'non_null_count':non_null_count,
+                    'null_count':null_count
+                }
+
+            metadata_text = f"Metadata Tabel \n\n{uploaded_file}\n\nKeterangan Kolom :\n\n"
+            for col, info in metadata.items():
+                metadata_text += f"{col}:\n"
+                metadata_text += f"  Keterangan: {info['keterangan']}\n"
+                metadata_text += f"  Tipe Data: {info['tipe_data']}\n"
+                metadata_text += f"  Non Null Count: {info['non_null_count']}\n"
+                metadata_text += f"  Null Count: {info['null_count']}\n\n"
+
+            # Provide a download button for the text file
+            st.download_button(
+                label="Download Metadata",
+                data=metadata_text.encode("utf-8"),
+                key="download_button",
+                file_name="metadata.txt",
+                mime="text/plain"
             )
 
     except:
