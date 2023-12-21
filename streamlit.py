@@ -30,10 +30,10 @@ if uploaded_file is not None:
         separator = ','  # Default separator for non-CSV files
     df, _ = fungsi.read_file(uploaded_file, separator)
 
-show_input_data = st.checkbox("Lihat Data !")
+show_input_data = st.checkbox("Lihat dan Edit Data !")
 
 if show_input_data and df is not None:
-    st.dataframe(df)
+    df = st.data_editor(df)
 
 # Cleaning Dataframe
 if df is not None:
@@ -67,7 +67,18 @@ if df is not None:
         df = df[column_order]
         st.dataframe(df)
 
-        st_map = st_folium(fungsi.map(df, jenis_lokasi), width= 800)
+        # try:
+        #     map_df = df.copy()
+        #     select_date = st.selectbox("Pilih Kolom Waktu", list_column)
+        #     map_df['Date'] = pd.to_datetime(map_df[select_date], format='%Y', infer_datetime_format=True, errors='coerce')
+        #     start_date, end_date = st.slider("Select Date Range", map_df['Date'].min(), map_df['Date'].max(), (map_df['Date'].min(), map_df['Date'].max()))
+        #
+        #     map_df = map_df[(map_df['Date'] >= start_date) & (map_df['Date'] <= end_date)]
+        #     st_map = st_folium(fungsi.map(map_df, jenis_lokasi), width= 800)
+        # except:
+        #     st.warning('Kolom Waktu Anda Salah !')
+
+        st_folium(fungsi.map(df, jenis_lokasi), width=800)
 
         col3, col4, col5 = st.columns(3)
 
@@ -117,4 +128,6 @@ if df is not None:
 
     except:
         st.warning('Anda Memasukkan Kolom yang salah!', icon="⚠️")
+
+st.write('©Muaaz Atqa')
 
