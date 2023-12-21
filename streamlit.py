@@ -7,7 +7,8 @@ import zipfile
 import fungsi
 import datetime
 
-st.write('19-12-2023')
+st.write('22-12-2023')
+st.write('ver.1')
 
 # Masukkan Dataset Awal
 df_kabkota = pd.read_excel('Kabupaten_Kota.xlsx')
@@ -19,6 +20,10 @@ df=None
 
 st.title('Open Data Template')
 st.write('### Daerah Sumatera Utara')
+
+'''
+Template ini menyediakan injeksi koordinat terhadap wilayah administrasi Kabupaten/Kota dan Kecamatan di Provinsi Sumatera Utara serta menyediakan data yang dapat di-download dalam bentuk Shapefile (.shp), Comma Separated Value (.csv) dan Excel (.xlsx)
+'''
 
 # Upload File
 uploaded_file = st.file_uploader("Pilih File !", type=["xls", "xlsx", "csv"])
