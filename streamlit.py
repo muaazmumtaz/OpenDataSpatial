@@ -157,12 +157,13 @@ if df is not None:
                     null_count = df[i].isnull().sum()
                 with col7:
                     tipe_data = st.selectbox(f"Tipe Data {i}", tipe_list)
-                    if tipe_data == 'Lainnya':
-                        tipe_data = st.text_input(f"Masukkan Tipe Data !")
+                    tipe_data_ = tipe_data
+                    if tipe_data_ == 'Lainnya':
+                        tipe_data_ = st.text_input(f"Masukkan Tipe Data !")
 
                 metadata[i] = {
                     'keterangan': keterangan,
-                    'tipe_data': tipe_data,
+                    'tipe_data': tipe_data_,
                     'non_null_count':non_null_count,
                     'null_count':null_count
                 }
